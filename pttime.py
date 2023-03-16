@@ -7,6 +7,7 @@ with open('.env') as f:
     username, password, push_url = f.read().split('\n')[:3]
 try:
     options = webdriver.FirefoxOptions()
+    options.add_argument('--headless')
     driver = webdriver.Firefox(executable_path='./geckodriver', options=options)
     url = 'https://www.pttime.org/login.php?returnto=attendance.php'
     driver.get(url)
