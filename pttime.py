@@ -1,9 +1,11 @@
-import requests
+import os
+import re
 import time
 
+import requests
 from selenium import webdriver
 
-with open('.env') as f:
+with open(os.path.dirname(__file__) + '/.env') as f:
     username, password, push_url = f.read().split('\n')[:3]
 try:
     options = webdriver.FirefoxOptions()
@@ -24,11 +26,11 @@ try:
     magic_points_long = driver.find_element('xpath', '/html/body/table[2]/tbody/tr/td/table[2]/tbody/tr[2]/td/div[1]/span[7]').text
 
     driver.close()
+
+    magic_points = re.match('魔力值 \((.*?)魔力/小时\) \[使用\&说明\]: (.*?)\(获得(.*?),详情\)', magic_points_long).groups()
 except:
     requests.post(push_url, data=f'[PTTime] failed, {username}')
 else:
-    import re
-    magic_points = re.match('魔力值 \((.*?)魔力/小时\) \[使用\&说明\]: (.*?)\(获得(.*?),详情\)', magic_points_long).groups()
     requests.post(
         push_url,
         data=
